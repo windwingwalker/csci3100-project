@@ -1,3 +1,6 @@
+import 'package:csci3100/views/setting/setting.dart';
+import 'package:csci3100/views/setting/upload_image.dart';
+import 'package:csci3100/views/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:csci3100/main.dart';
 import 'package:csci3100/views/home.dart';
@@ -6,13 +9,11 @@ import 'package:csci3100/routing/wrapper.dart';
 import 'package:csci3100/models/user.dart';
 import 'package:csci3100/views/chat/chat.dart';
 import 'package:provider/provider.dart';
+import 'package:csci3100/views/setting/profile.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings){
     final args = settings.arguments;
-    //final user = Provider.of<User>(context);
-    print("hi");
-    print(settings);
 
     switch (settings.name){
       case '/':
@@ -20,7 +21,11 @@ class RouteGenerator {
       case '/chat':
         return MaterialPageRoute(builder: (_) => Chat());
       case '/setting':
-        return MaterialPageRoute(builder: (_) => )
+        return MaterialPageRoute(builder: (_) => Setting());
+      case '/profile':
+        return MaterialPageRoute(builder: (_) => Profile());
+      case '/image_upload':
+        return MaterialPageRoute(builder: (_) => ImageCapture());
       default:
         return _errorRoute();
 

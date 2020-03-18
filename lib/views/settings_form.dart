@@ -80,7 +80,7 @@ class _SettingFormState extends State<SettingForm> {
                       Navigator.pop(context);
                     }
                   },
-                )
+                ),
               ],
             ),
           );
