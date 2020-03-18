@@ -1,4 +1,4 @@
-import 'package:csci3100/route_generator.dart';
+import 'package:csci3100/routing/route_generator.dart';
 import 'package:csci3100/routing/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:csci3100/views/login.dart';
@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     return StreamProvider<User>.value( //state the return type
       value: AuthService().user, //return value
       child: MaterialApp( //every thing in this widget is based on the value of streamprovide
-        //home: Wrapper(),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,
       ),

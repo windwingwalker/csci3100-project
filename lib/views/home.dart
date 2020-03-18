@@ -41,6 +41,11 @@ class Home extends StatelessWidget {
                  icon: Icon(Icons.settings),
                  label: Text('setting'),
              ),
+             FlatButton.icon(
+                 onPressed: () => Navigator.of(context).pushNamed('/chat'),
+                 icon: Icon(Icons.chat),
+                 label: Text('chat')
+             ),
            ],
          ),
          body: UserList(),
