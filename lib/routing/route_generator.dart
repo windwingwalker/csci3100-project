@@ -1,3 +1,5 @@
+import 'package:csci3100/views/auth/forgot_password.dart';
+import 'package:csci3100/views/auth/register.dart';
 import 'package:csci3100/views/setting/setting.dart';
 import 'package:csci3100/views/setting/upload_image.dart';
 import 'package:csci3100/views/settings_form.dart';
@@ -10,6 +12,7 @@ import 'package:csci3100/models/user.dart';
 import 'package:csci3100/views/chat/chat.dart';
 import 'package:provider/provider.dart';
 import 'package:csci3100/views/setting/profile.dart';
+import 'package:csci3100/views/auth/login.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings){
@@ -26,10 +29,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Profile());
       case '/image_upload':
         return MaterialPageRoute(builder: (_) => ImageCapture());
+      case '/register':
+        return MaterialPageRoute(builder: (_) => Register());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => Login());
+      case '/forgot_password':
+        return MaterialPageRoute(builder: (_) => ForgotPassword());
       default:
         return _errorRoute();
-
-
     }
   }
 

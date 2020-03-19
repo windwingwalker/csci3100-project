@@ -10,9 +10,8 @@ class AuthService{
   }
 
   //match with StreamProvider<User> type
-  Stream<User> get user{ //it is a getter named "user"
-    return _auth.onAuthStateChanged //pass the FirebaseUser object into a function, change the object to User
-        .map((FirebaseUser user) => _userFromFirebaseUser(user));
+  Stream<User> get user{
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser); //FirebaseUser -> User
   }
 
   Future signInAnon() async{
@@ -35,11 +34,21 @@ class AuthService{
     }
   }
 
-  Future register(String email, String password) async {
+  Future resetPassword(String email) async {
+    try{
+      await _auth.sendPasswordResetEmail(email: email);
+      return 0;
+    }catch (e){
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future signUp(String email, String password) async {
     try{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-
+      await user.sendEmailVerification();
       await DatabaseService(uid: user.uid).updateUserData('user', 'NA', 18);
       return _userFromFirebaseUser(user);
     }catch (e){
@@ -52,7 +61,10 @@ class AuthService{
     try{
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      if (user.isEmailVerified)
+        return _userFromFirebaseUser(user);
+      else
+        return null;
     }catch (e){
       print(e.toString());
       return null;

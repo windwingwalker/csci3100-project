@@ -25,8 +25,8 @@ class DatabaseService{
     }).toList();
   }
 
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot){
-    return UserData(
+  User _userDataFromSnapshot(DocumentSnapshot snapshot){
+    return User(
       uid: uid,
       name: snapshot.data['name'],
       age: snapshot.data['age'],
@@ -41,7 +41,7 @@ class DatabaseService{
   }
 
   //get specific user
-  Stream<UserData> get userData{
+  Stream<User> get user{
     return userCollection.document(uid).snapshots() //documentSnapshot -> UserData
         .map(_userDataFromSnapshot);
   }

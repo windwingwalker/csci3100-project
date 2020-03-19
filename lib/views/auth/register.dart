@@ -4,10 +4,6 @@ import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
-
-  final Function toggleView;
-  Register({this.toggleView});
-
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -20,7 +16,7 @@ class _RegisterState extends State<Register> {
 
   String email = '';
   String password = '';
-  String error = '';
+  String message = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +28,10 @@ class _RegisterState extends State<Register> {
           backgroundColor: Colors.brown[400],
           actions: <Widget>[
             FlatButton.icon(
-                onPressed: () {
-                  widget.toggleView();
-                },
+                onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
                 icon: Icon(Icons.person),
                 label: Text('Login')
-            )
+            ),
           ],
         ),
         body: Container(
@@ -75,10 +69,15 @@ class _RegisterState extends State<Register> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()){
                         setState(() => loading = true);
-                        dynamic result = await _auth.register(email, password); //dynamic means can be null
+                        dynamic result = await _auth.signUp(email, password);
                         if (result == null){
-                          setState((){
-                            error = 'Please supply a valid email';
+                          setState(() {
+                            message = 'Please enter valid email';
+                            loading = false;
+                          });
+                        } else {
+                          setState(() {
+                            message = "We have already sent a verification email to you, please login after you verify the account";
                             loading = false;
                           });
                         }
@@ -87,7 +86,7 @@ class _RegisterState extends State<Register> {
                   ),
                   SizedBox(height: 12.0,),
                   Text(
-                    error,
+                    message,
                     style: TextStyle(color: Colors.red, fontSize: 14.0),
                   )
                 ],

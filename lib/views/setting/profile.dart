@@ -21,11 +21,11 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
+    return StreamBuilder<User>(
+      stream: DatabaseService(uid: user.uid).user,
       builder: (context, snapshot){
         if (snapshot.hasData){
-          UserData userData = snapshot.data;
+          User user = snapshot.data;
           return Scaffold(
             backgroundColor: Colors.brown[600],
             appBar: AppBar(
@@ -38,7 +38,7 @@ class _ProfileState extends State<Profile> {
                 children: <Widget>[
                   Text("Name"),
                   TextFormField(
-                    initialValue: userData.name,
+                    initialValue: user.name,
                     decoration: textInputDecoration,
                     validator: (val) => val.isEmpty ? 'Please enter a name' : null,
                     onChanged: (val) => setState(() => _currentName = val),
@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
                       );
                     }).toList(),
                     onChanged: (val) => setState(() => _currentCollege = val),
-                    value: _currentCollege ?? userData.college,
+                    value: _currentCollege ?? user.college,
                   ),
                   Slider(
                     value: (_currentAge ?? 100).toDouble(),
@@ -73,9 +73,9 @@ class _ProfileState extends State<Profile> {
                     onPressed: () async {
                       if(_formKey.currentState.validate()){
                         await DatabaseService(uid: user.uid).updateUserData(
-                            _currentName ?? userData.name,
-                            _currentCollege ?? userData.college,
-                            _currentAge ?? userData.age
+                            _currentName ?? user.name,
+                            _currentCollege ?? user.college,
+                            _currentAge ?? user.age
                         );
                         Navigator.pop(context);
                       }

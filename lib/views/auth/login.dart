@@ -4,10 +4,6 @@ import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
-
-  final Function toggleView;
-  Login({this.toggleView});
-
   @override
   _LoginState createState() => _LoginState();
 }
@@ -32,12 +28,15 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.brown[400],
         actions: <Widget>[
           FlatButton.icon(
-              onPressed: () {
-                widget.toggleView();
-              },
-              icon: Icon(Icons.person),
-              label: Text('Register')
-          )
+            onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
+            icon: Icon(Icons.person),
+            label: Text('Register'),
+          ),
+          FlatButton.icon(
+            icon: Icon(Icons.lock_open),
+            label: Text('Forgot password'),
+            onPressed: () => Navigator.of(context).pushReplacementNamed('/forgot_password'),
+          ),
         ],
       ),
       body: Container(

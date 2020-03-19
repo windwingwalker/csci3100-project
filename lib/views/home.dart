@@ -24,7 +24,7 @@ class Home extends StatelessWidget {
        child: Scaffold(
          backgroundColor: Colors.brown[50],
          appBar: AppBar(
-           title: Text('Tinder'),
+           title: Text('CUagain'),
            backgroundColor: Colors.brown[400],
            elevation: 0.0,
            actions: <Widget>[
@@ -46,7 +46,7 @@ class Home extends StatelessWidget {
              ),
            ],
          ),
-         body: UserList(),
+         //body: UserList(),
        ),
      );
    }
