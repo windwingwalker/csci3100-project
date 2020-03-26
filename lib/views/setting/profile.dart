@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
             ),
           );
         }else{
-          return null;
+          return Scaffold();
         }
       },
     );

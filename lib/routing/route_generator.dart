@@ -1,16 +1,12 @@
 import 'package:csci3100/views/auth/forgot_password.dart';
 import 'package:csci3100/views/auth/register.dart';
 import 'package:csci3100/views/setting/setting.dart';
+import 'package:csci3100/views/setting/system.dart';
 import 'package:csci3100/views/setting/upload_image.dart';
 import 'package:csci3100/views/settings_form.dart';
 import 'package:flutter/material.dart';
-import 'package:csci3100/main.dart';
-import 'package:csci3100/views/home.dart';
-import 'package:csci3100/views/chat/chat_room_list.dart';
 import 'package:csci3100/routing/wrapper.dart';
-import 'package:csci3100/models/user.dart';
 import 'package:csci3100/views/chat/chat.dart';
-import 'package:provider/provider.dart';
 import 'package:csci3100/views/setting/profile.dart';
 import 'package:csci3100/views/auth/login.dart';
 
@@ -35,6 +31,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Login());
       case '/forgot_password':
         return MaterialPageRoute(builder: (_) => ForgotPassword());
+      case '/system':
+        return MaterialPageRoute(builder: (_) => System());
       default:
         return _errorRoute();
     }

@@ -15,6 +15,12 @@ class DatabaseService{
     });
   }
 
+  Future inactivate() async {
+    return await userCollection.document(uid).setData({
+        'active': false
+    });
+  }
+
   List<User> _userListFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc){
       return User(

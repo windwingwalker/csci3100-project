@@ -1,7 +1,7 @@
 import 'package:csci3100/models/user.dart';
 import 'package:csci3100/views/auth/login.dart';
 import 'package:flutter/material.dart';
-import 'package:csci3100/views/home.dart';
+import 'package:csci3100/views/home/home.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {

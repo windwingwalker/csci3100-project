@@ -29,12 +29,6 @@ class Home extends StatelessWidget {
            elevation: 0.0,
            actions: <Widget>[
              FlatButton.icon(
-                 onPressed: () async {
-                   await  _auth.signOut();
-                 },
-                 icon: Icon(Icons.person),
-                 label: Text('logout')),
-             FlatButton.icon(
                  onPressed: () => Navigator.of(context).pushNamed('/setting'),
                  icon: Icon(Icons.settings),
                  label: Text('setting'),

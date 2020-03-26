@@ -28,7 +28,19 @@ class Setting extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton.icon(
+                  onPressed: () => Navigator.of(context).pushReplacementNamed('/image_upload'),
+                  icon: Icon(Icons.photo),
+                  label: Text("Upload photo"),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -46,7 +58,7 @@ class Setting extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FlatButton.icon(
-                  onPressed: () => Navigator.of(context).pushNamed('/profile'),
+                  onPressed: () => Navigator.of(context).pushNamed('/system'),
                   icon: Icon(Icons.settings_applications),
                   label: Text("System setting"),
               )
