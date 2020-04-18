@@ -5,24 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User _userFromFirebaseUser(FirebaseUser user){ //turn a FirebaseUser into User type
+  //turn a FirebaseUser into User type
+  User _userFromFirebaseUser(FirebaseUser user){
     return user != null ? User(uid: user.uid) : null;
   }
 
-  //match with StreamProvider<User> type
+  //create a stream, when user state updated, get the new user
   Stream<User> get user{
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser); //FirebaseUser -> User
-  }
-
-  Future signInAnon() async{
-    try{
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    }catch(e){
-      print(e.toString());
-      return null;
-    }
   }
 
   Future signOut() async{
@@ -49,7 +39,7 @@ class AuthService{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       await user.sendEmailVerification();
-      await DatabaseService(uid: user.uid).updateUserData('user', 'NA', 18);
+      await DatabaseService(uid: user.uid).setFirst();
       return _userFromFirebaseUser(user);
     }catch (e){
       print(e.toString());
@@ -61,10 +51,11 @@ class AuthService{
     try{
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      if (user.isEmailVerified)
+      /*if (user.isEmailVerified)
         return _userFromFirebaseUser(user);
       else
-        return null;
+        return null;*/
+      return _userFromFirebaseUser(user);
     }catch (e){
       print(e.toString());
       return null;

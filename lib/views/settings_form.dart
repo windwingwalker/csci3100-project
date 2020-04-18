@@ -72,11 +72,14 @@ class _SettingFormState extends State<SettingForm> {
                   ),
                   onPressed: () async {
                     if(_formKey.currentState.validate()){
-                      await DatabaseService(uid: user.uid).updateUserData(
+                      /*await DatabaseService(uid: user.uid).updateUserData(
                           _currentName ?? user.name,
                           _currentCollege ?? user.college,
                           _currentAge ?? user.age
-                      );
+                      );*/
+                      //await DatabaseService(uid: user.uid).updateUserData(_currentName, user.name);
+                      //await DatabaseService(uid: user.uid).updateUserData(_currentCollege, user.college);
+                      //await DatabaseService(uid: user.uid).updateUserData(_currentAge, user.age);
                       Navigator.pop(context);
                     }
                   },

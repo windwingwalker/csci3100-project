@@ -1,3 +1,4 @@
+import 'package:csci3100/shared/inputs.dart';
 import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:csci3100/services/auth.dart';
@@ -16,14 +17,33 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   String email = '';
   String message = '';
 
+  void submit() async {
+    if (_formKey.currentState.validate()) {
+      setState(() => loading = true);
+      dynamic result = await _auth.resetPassword(email);
+      if (result == null){
+        setState(() {
+          message = 'Invalid email';
+          loading = false;
+        });
+      }else {
+        setState(() {
+          message = "Email sent";
+          loading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
         title: Text('Reset Password'),
-        elevation: 0.0,
-        backgroundColor: Colors.brown[400],
+        flexibleSpace: Container(
+          decoration: appBarDecoration,
+        ),
         actions: <Widget>[
           FlatButton.icon(
             onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
@@ -34,44 +54,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
         body: Container(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          decoration: bodyDecoration,
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
                 SizedBox(height: 20.0),
-                TextFormField(
-                  onChanged: (val) {
-                    setState(() => email = val);
-                  },
-                  decoration: textInputDecoration.copyWith(hintText: 'Email'),
-                ),
+                MyTextFormField(type: "Email",changeFunc: (String val) => setState(()=> email = val)),
                 SizedBox(height: 20.0),
-                RaisedButton(
-                  color: Colors.pink[400],
-                  child: Text(
-                    'Send reset email',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      setState(() => loading = true);
-                      dynamic result = await _auth.resetPassword(email);
-                      if (result == null){
-                        setState(() {
-                          message = 'Invalid';
-                          loading = false;
-                        });
-                      }else {
-                        setState(() {
-                          message = "Email sent";
-                          loading = false;
-                        });
-                      }
-                    }
-                  },
-                ),
+                MySubmitButton("Send reset email", submit),
               ]
             ),
           )

@@ -1,3 +1,4 @@
+import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/views/chat/chat_room_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,11 +11,11 @@ class Chat extends StatelessWidget {
     return StreamProvider<List<User>>.value(
       value: DatabaseService().users,
       child: Scaffold(
-        backgroundColor: Colors.brown[50],
         appBar: AppBar(
-          title: Text('Chat room'),
-          backgroundColor: Colors.brown[400],
-          elevation: 0.0,
+          title: Text("Chat"),
+          flexibleSpace: Container(
+            decoration: appBarDecoration,
+          ),
         ),
         body: ChatRoomList(),
       ),

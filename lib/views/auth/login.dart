@@ -1,7 +1,11 @@
+import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/auth.dart';
+import 'package:csci3100/services/database.dart';
 import 'package:csci3100/shared/constants.dart';
+import 'package:csci3100/shared/inputs.dart';
 import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -18,79 +22,71 @@ class _LoginState extends State<Login> {
   String password = '';
   String error = '';
 
+  void submit() async {
+    if (_formKey.currentState.validate()) {
+      setState(() => loading = true);
+      dynamic result = await _auth.signIn(email, password);
+      if (result == null){
+        setState(() {
+          error = 'COULD NOT SIGN IN WITH THOSE CREDENTIALS';
+          loading = false;
+        });
+      }else{
+        DatabaseService(uid: result.uid).user.listen((onData) {
+          if (onData.firstLogin == true){
+            Navigator.of(context).pushReplacementNamed('/self_info');
+          }else{
+            Navigator.of(context).pushReplacementNamed('/bottombar');
+          }
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      backgroundColor: Colors.brown[100],
-      appBar: AppBar(
-        title: Text('Sign in'),
-        elevation: 0.0,
-        backgroundColor: Colors.brown[400],
-        actions: <Widget>[
-          FlatButton.icon(
-            onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
-            icon: Icon(Icons.person),
-            label: Text('Register'),
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          title: Text('Log in'),
+          flexibleSpace: Container(
+            decoration: appBarDecoration,
           ),
-          FlatButton.icon(
-            icon: Icon(Icons.lock_open),
-            label: Text('Forgot password'),
-            onPressed: () => Navigator.of(context).pushReplacementNamed('/forgot_password'),
-          ),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              TextFormField(
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
-                decoration: textInputDecoration.copyWith(hintText: 'Email'),
+          actions: <Widget>[
+            FlatButton.icon(
+              onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
+              icon: Icon(Icons.person),
+              label: Text('Register'),
+            ),
+            FlatButton.icon(
+              icon: Icon(Icons.lock_open),
+              label: Text('Forgot password'),
+              onPressed: () => Navigator.of(context).pushReplacementNamed('/forgot_password'),
+            ),
+          ],
+        ),
+        body: Container(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+            decoration: bodyDecoration,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 20.0),
+                  MyTextFormField(type: "Email",changeFunc: (String val) => setState(()=> email = val)),
+                  SizedBox(height: 20.0),
+                  MyTextFormField(type: "Password",changeFunc: (String val) => setState(()=> password = val)),
+                  SizedBox(height: 20.0),
+                  MySubmitButton("Log in", submit),
+                  SizedBox(height: 12.0),
+                  Text(
+                    error,
+                    style: TextStyle(color: Colors.amber, fontSize: 14.0),
+                  )
+                ],
               ),
-              SizedBox(height: 20.0),
-              TextFormField(
-                obscureText: true,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-                decoration: textInputDecoration.copyWith(hintText: 'Password'),
-              ),
-              SizedBox(height: 20.0),
-              RaisedButton(
-                color: Colors.pink[400],
-                child: Text(
-                  'Sign in',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    setState(() => loading = true);
-                    dynamic result = await _auth.signIn(email, password);
-                    if (result == null){
-                      setState(() {
-                        error = 'COULD NOT SIGN IN WITH THOSE CREDENTIALS';
-                        loading = false;
-                      });
-                    }
-                  }
-                },
-              ),
-              SizedBox(height: 12.0,),
-              Text(
-                error,
-                style: TextStyle(color: Colors.red, fontSize: 14.0),
-              )
-            ],
-          ),
+            )
         )
-      )
     );
   }
 }

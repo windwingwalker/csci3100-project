@@ -2,16 +2,20 @@ class User{
   final String uid;
   final String name;
   final String college;
-  final int age;
+  final double age;
+  final String gender;
+  final bool firstLogin;
+  final bool liked;
 
-  User({this.uid, this.name, this.college, this.age});
+  User({this.uid, this.name, this.age, this.gender, this.college, this.firstLogin, this.liked});
 }
 
 class UserData{
   final String uid;
   final String name;
   final String college;
-  final int age;
+  final double age;
+  final bool firstLogin;
 
-  UserData({this.uid, this.name, this.college, this.age});
+  UserData({this.uid, this.name, this.age, this.college, this.firstLogin});
 }
