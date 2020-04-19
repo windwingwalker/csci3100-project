@@ -53,4 +53,18 @@ const bodyDecoration = BoxDecoration(
   ),
 );
 
+const buttonDecoration = BoxDecoration(
+  border: Border(
+    bottom: BorderSide(
+        color: Colors.amber,
+        width: 4.0
+    ),
+    right: BorderSide(
+        color: Colors.amber,
+        width: 4.0
+    ),
+  )
+);
+
+
 

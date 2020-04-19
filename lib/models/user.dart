@@ -6,11 +6,12 @@ class User{
   final String gender;
   final bool firstLogin;
   final bool liked;
+  final int imageNum;
 
-  User({this.uid, this.name, this.age, this.gender, this.college, this.firstLogin, this.liked});
+  User({this.uid, this.name, this.age, this.gender, this.college, this.firstLogin, this.liked, this.imageNum});
 }
 
-class UserData{
+/*class UserData{
   final String uid;
   final String name;
   final String college;
@@ -18,4 +19,4 @@ class UserData{
   final bool firstLogin;
 
   UserData({this.uid, this.name, this.age, this.college, this.firstLogin});
-}
+}*/

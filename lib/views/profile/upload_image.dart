@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csci3100/models/user.dart';
+import 'package:csci3100/services/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class ImageCapture extends StatefulWidget {
   @override
@@ -31,9 +34,11 @@ class _ImageCaptureState extends State<ImageCapture> {
   Future<void> _cropImage() async {
     File cropped = await ImageCropper.cropImage(
         sourcePath: _imageFile.path,
-        //toolbarColor: Colors.purple,
-        //toolbarWidgetColor: Colors.white,
-        //toolbarTitle: 'Crop It',
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Colors.amber,
+          toolbarWidgetColor: Colors.indigo,
+          toolbarTitle: 'Crop It',
+        ),
         // ratioX: 1.0,
         // ratioY: 1.0,
          // maxWidth: 512,
@@ -47,48 +52,70 @@ class _ImageCaptureState extends State<ImageCapture> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.photo_camera),
-              onPressed: () => _pickImage(ImageSource.camera),
+    final user = Provider.of<User>(context);
+    return StreamBuilder<User>(
+      stream: DatabaseService(uid: user.uid).user,
+      builder: (context, snapshot) {
+        if (snapshot.hasData){
+          User user = snapshot.data;
+          return Scaffold(
+            bottomNavigationBar: BottomAppBar(
+              color: Colors.amber,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.photo_camera),
+                    onPressed: () => _pickImage(ImageSource.camera),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.photo_library),
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.last_page),
+                    onPressed: () => Navigator.of(context).pushReplacementNamed('/profile'),
+                  )
+                ],
+              ),
             ),
-            IconButton(
-              icon: Icon(Icons.photo_library),
-              onPressed: () => _pickImage(ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
-      body: ListView(
-        children: <Widget>[
-          if (_imageFile != null) ...[
-            Image.file(_imageFile),
-            Row(
+            body: ListView(
               children: <Widget>[
-                FlatButton(
-                  child: Icon(Icons.crop),
-                  onPressed: _cropImage,
-                ),
-                FlatButton(
-                  child: Icon(Icons.refresh),
-                  onPressed: _clear,
-                ),
+                if (_imageFile != null) ...[
+                  Container(
+                    height: 480,
+                    child: Image.file(_imageFile),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      FlatButton(
+                        child: Icon(Icons.crop),
+                        onPressed: _cropImage,
+                      ),
+                      FlatButton(
+                        child: Icon(Icons.refresh),
+                        onPressed: _clear,
+                      ),
+                    ],
+                  ),
+                  Uploader(file: _imageFile, user: user,),
+                ]
               ],
             ),
-            Uploader(file: _imageFile),
-          ]
-        ],
-      ),
+          );
+        }else{
+          return Container();
+        }
+      }
     );
   }
 }
 
 class Uploader extends StatefulWidget {
   final File file;
-  Uploader({Key key, this.file}) : super(key: key);
+  final User user;
+  Uploader({Key key, this.file, this.user}) : super(key: key);
 
   @override
   _UploaderState createState() => _UploaderState();
@@ -100,7 +127,8 @@ class _UploaderState extends State<Uploader> {
   StorageUploadTask _uploadTask;
 
   void _startUpload(){
-    String filePath = 'images/${DateTime.now()}.png';
+    int num = widget.user.imageNum + 1;
+    String filePath = 'images/${widget.user.uid}/$num.png';
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
     });
@@ -116,7 +144,14 @@ class _UploaderState extends State<Uploader> {
           return Column(
             children: <Widget>[
               if (_uploadTask.isComplete)
-                Text('Done'),
+                FlatButton.icon(
+                  onPressed: () {
+                    DatabaseService(uid: widget.user.uid).updateOneData('imageNum', FieldValue.increment(1));
+                    Navigator.of(context).pushReplacementNamed('/profile');
+                  },
+                  icon: Icon(Icons.done),
+                  label: Text("Finish")
+                ),
               if (_uploadTask.isPaused)
                 FlatButton(
                   child: Icon(Icons.play_arrow),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/database.dart';
 import 'package:csci3100/shared/constants.dart';
+import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
@@ -110,18 +111,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             )),
                       );
                     }else{
-                      return Container();
+                      return Loading();
                     }
                   }
                 );
               }
               else{
-                return Container();
+                return Loading();
               }
             }
           );
         }else{
-          return Container();
+          return Loading();
         }
       }
     );

@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/message.dart';
 import 'package:csci3100/models/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService{
   final CollectionReference userCollection = Firestore.instance.collection('user');
@@ -29,6 +30,7 @@ class DatabaseService{
       "gender": gender,
       "college": college,
       "firstLogin": false,
+      "imageNum": 0
     });
   }
 
@@ -57,7 +59,7 @@ class DatabaseService{
   }
 
   Future updateOneData(String label, var value) async {
-    return await userCollection.document(uid).setData({
+    return await userCollection.document(uid).updateData({
         label: value
     });
   }
@@ -124,6 +126,8 @@ class DatabaseService{
         college: doc.data['college'] ?? '',
         age: doc.data['age'] ?? 0,
         gender: doc.data['gender'] ?? '',
+        firstLogin: doc.data['firstLogin'],
+        imageNum: doc.data['imageNum']
       );
     }).where((test)=> test.uid != uid).toList();
   }
@@ -136,6 +140,7 @@ class DatabaseService{
       gender: snapshot.data['gender'],
       college: snapshot.data['college'],
       firstLogin: snapshot.data['firstLogin'],
+      imageNum: snapshot.data['imageNum']
     );
   }
 
@@ -172,7 +177,6 @@ class DatabaseService{
   }
 
 
-
   Future checkLiked(String targetId) async{
     QuerySnapshot qs = await likeCollection.where('from', isEqualTo: uid)
         .where('to', isEqualTo: targetId).getDocuments();
@@ -187,6 +191,13 @@ class DatabaseService{
   Stream<QuerySnapshot> get dislikes{
     return dislikeCollection.where("from", isEqualTo: uid).snapshots();
   }
+
+  Future getImageUrl() async {
+    StorageReference ref = FirebaseStorage.instance.ref().child('/images/$uid/1.png');
+    return Uri.parse(await ref.getDownloadURL() as String);
+  }
+
+
 
 
 

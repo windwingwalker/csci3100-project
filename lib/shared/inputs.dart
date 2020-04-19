@@ -7,32 +7,23 @@ class MySettingButton extends StatelessWidget {
   final String name;
   final icon;
   final VoidCallback callback;
+  final double width;
 
-  const MySettingButton(this.name, this.icon, this.callback);
+  const MySettingButton(this.name, this.icon, this.callback, this.width);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: callback,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange, width: 3),
-        ),
-        width: 400.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Container(
+      height: 150,
+      width: width,
+      decoration: buttonDecoration,
+      child: InkWell(
+        onTap: callback,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: FlatButton.icon(
-                icon: Icon(icon),
-                label: Text(name),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Icon(Icons.arrow_forward_ios),
-            ),
+            Icon(icon, size: 60,),
+            Text(name, style: TextStyle(fontSize: 20),)
           ],
         ),
       ),

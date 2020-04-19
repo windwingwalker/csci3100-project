@@ -20,9 +20,6 @@ class Setting extends StatelessWidget {
     void discoverFunc(){
       Navigator.of(context).pushNamed('/discover');
     }
-    void reportFunc(){
-      Navigator.of(context).pushNamed('/report');
-    }
     void helpFunc(){
       Navigator.of(context).pushNamed('/help');
     }
@@ -32,10 +29,9 @@ class Setting extends StatelessWidget {
     }
 
 
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Setting"),
+        title: Text("Settings"),
         flexibleSpace: Container(
           decoration: appBarDecoration,
         ),
@@ -44,29 +40,23 @@ class Setting extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
         decoration: bodyDecoration,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            /*Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed('/image_upload'),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red[400],
-                    radius: 125.0,
-                  ),
-                )
+                MySettingButton("Account", Icons.account_box, accountFunc, 150),
+                MySettingButton("Notification", Icons.notifications_active, notificationFunc, 150),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),*/
-            MySettingButton("Account", Icons.account_box, accountFunc),
-            MySettingButton("Notification", Icons.notifications_active, notificationFunc),
-            MySettingButton("Discover setting", Icons.search, discoverFunc),
-            MySettingButton("Report", Icons.report_problem, reportFunc),
-            MySettingButton("Help & Support", Icons.help_outline, helpFunc),
-            MySettingButton("Log out", Icons.exit_to_app, logoutFunc),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                MySettingButton("Discover Setting", Icons.search, discoverFunc, 150),
+                MySettingButton("Help & Support", Icons.help_outline, helpFunc, 150),
+              ],
+            ),
+            MySettingButton("Log out", Icons.exit_to_app, logoutFunc, 340),
           ],
         ),
       ),
