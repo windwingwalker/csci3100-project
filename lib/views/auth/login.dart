@@ -1,12 +1,9 @@
-import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/auth.dart';
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/shared/inputs.dart';
 import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override

@@ -36,7 +36,7 @@ class _ChatRoomState extends State<ChatRoom> {
         Future<void> sent() async {
           if (messageController.text.length > 0) {
             await MessageDB(chatRoomId: widget.room, isUser1: widget.isUser1, uid: userId.uid)
-                .sendMessage(messageController.text, DateTime.now().toIso8601String().toString());
+                .sendMessage(messageController.text, DateTime.now().toUtc().toIso8601String().toString());
             messageController.clear();
             scrollController.animateTo(
               scrollController.position.maxScrollExtent,
@@ -65,6 +65,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     itemCount: messages.length,
                     controller: scrollController,
                     itemBuilder: (context, index) {
+                      MessageDB(chatRoomId: widget.room).resetUnread(widget.isUser1);
                       return MessageTile(message: messages[index]);
                     },
                     separatorBuilder: (context, index) => Divider(
