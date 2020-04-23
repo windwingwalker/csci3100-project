@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csci3100/services/messagedb.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:csci3100/models/user.dart';
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/views/chat/chat_room_tile.dart';
 
 class ChatRoomList extends StatefulWidget {
@@ -17,7 +17,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
     final user = Provider.of<User>(context);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().chatRooms,
+      stream: MessageDB().chatRooms,
       builder: (context, snapshot){
         if (snapshot.hasData){
           List<DocumentSnapshot> docs = snapshot.data.documents;
@@ -41,6 +41,7 @@ class _ChatRoomListState extends State<ChatRoomList> {
               }
             },
           );
+
         }else{
           return Container();
         }

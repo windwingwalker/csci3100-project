@@ -1,4 +1,6 @@
 import 'package:csci3100/models/user.dart';
+import 'package:csci3100/services/auth.dart';
+import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/shared/inputs.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +14,54 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   bool isDeactivate = false;
 
-  bool showEmail = true;
+  bool showEmail = false;
   bool showBirthday = true;
+  bool deleteAc = false;
+  bool isBlur = false;
+
+  TextEditingController _textFieldController = TextEditingController();
+  final AuthService _auth = AuthService();
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Are you sure to leave us?'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Type 'Delete CUagain' to confirm delete"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('CONFIRM'),
+                onPressed: () {
+                  if (_textFieldController.text == "Delete CUagain"){
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed('/login');
+                    _auth.deleteAccount();
+                  }else{
+                    _textFieldController.clear();
+                  }
+                },
+              )
+            ],
+          );
+        });
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final userId = Provider.of<UserId>(context);
+    UserDB db = UserDB(uid: userId.uid);
     return Scaffold(
       appBar: AppBar(
         title: Text("Account"),
@@ -31,9 +74,20 @@ class _AccountState extends State<Account> {
         decoration: bodyDecoration,
         child: Column(
           children: <Widget>[
-            MySwitch(name: "Deactivate Account", value: isDeactivate ,changeFunc: (bool val)=> setState(()=>isDeactivate = val)),
-            MySwitch(name: "Show Email", value: showEmail ,changeFunc: (bool val)=> setState(()=> showEmail = val)),
-            MySwitch(name: "Show Birthday", value: showBirthday ,changeFunc: (bool val)=> setState(()=> showBirthday = val)),
+            MySwitch(name: "Deactivate Account", value: isDeactivate ,changeFunc: (bool val){
+              setState(()=>isDeactivate = val);
+              db.updateOneData('isActivate', !val);
+            }),
+            MySwitch(name: "Blur Mode", value: isBlur ,changeFunc: (bool val){
+              setState(()=> isBlur = val);
+              db.updateOneData('isBlur', val);
+            }),
+            MySwitch(name: "Delete Account", value: deleteAc ,changeFunc: (bool val){
+              if (val = true){
+                _displayDialog(context);
+              }
+            }),
+
           ],
         ),
       ),

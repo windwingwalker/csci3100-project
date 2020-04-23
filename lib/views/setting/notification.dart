@@ -15,7 +15,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final userId = Provider.of<UserId>(context);
 
     return Scaffold(
       appBar: AppBar(

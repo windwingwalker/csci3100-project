@@ -1,6 +1,7 @@
 import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/auth.dart';
 import 'package:csci3100/services/database.dart';
+import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/shared/inputs.dart';
 import 'package:csci3100/shared/loading.dart';
@@ -26,17 +27,38 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState.validate()) {
       setState(() => loading = true);
       dynamic result = await _auth.signIn(email, password);
-      if (result == null){
+      if (result == null) {
+        print("null");
         setState(() {
           error = 'COULD NOT SIGN IN WITH THOSE CREDENTIALS';
           loading = false;
         });
       }else{
-        DatabaseService(uid: result.uid).user.listen((onData) {
+        UserDB(uid: result.uid).user.listen((onData) {
           if (onData.firstLogin == true){
             Navigator.of(context).pushReplacementNamed('/self_info');
           }else{
-            Navigator.of(context).pushReplacementNamed('/bottombar');
+            if(onData.isBanned == true){
+              showDialog(
+                context: context,
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    content: Text("You account has been suspended, please contact admin"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacementNamed('/help');
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }else{
+              Navigator.of(context).pushReplacementNamed('/bottombar');
+            }
           }
         });
       }

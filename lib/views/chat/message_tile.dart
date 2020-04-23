@@ -10,16 +10,16 @@ class MessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final userId = Provider.of<UserId>(context);
     return Container(
       child: Column(
-        crossAxisAlignment: user.uid == message.from ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: userId.uid == message.from ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           //Text(
           //  from,
           //),
           Material(
-            color: user.uid == message.from ? Colors.teal : Colors.red,
+            color: userId.uid == message.from ? Colors.teal : Colors.red,
             borderRadius: BorderRadius.circular(10.0),
             elevation: 6.0,
             child: Container(

@@ -1,7 +1,6 @@
 import 'package:csci3100/routing/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'models/user.dart';
 import 'services/auth.dart';
 
@@ -11,8 +10,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>.value( //listen to a stream which return a user
-      value: AuthService().user,
+    return StreamProvider<UserId>.value(
+      value: AuthService().userId,
       child: MaterialApp(
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,

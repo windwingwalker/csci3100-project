@@ -1,12 +1,15 @@
 import 'package:csci3100/routing/bottombar.dart';
 import 'package:csci3100/views/auth/forgot_password.dart';
 import 'package:csci3100/views/auth/register.dart';
-import 'package:csci3100/views/chat/chat_room.dart';
+import 'package:csci3100/views/chat/report.dart';
+import 'package:csci3100/views/home/intro.dart';
 import 'package:csci3100/views/init/description.dart';
 import 'package:csci3100/views/init/self_info.dart';
 import 'package:csci3100/views/init/target.dart';
+import 'package:csci3100/views/profile/gallery.dart';
 import 'package:csci3100/views/setting/account.dart';
 import 'package:csci3100/views/setting/discover.dart';
+import 'package:csci3100/views/setting/help.dart';
 import 'package:csci3100/views/setting/notification.dart';
 import 'package:csci3100/views/setting/setting.dart';
 import 'package:csci3100/views/profile/upload_image.dart';
@@ -25,14 +28,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Wrapper());
       case '/chat':
         return MaterialPageRoute(builder: (_) => Chat());
-      case '/chatroom':
-        return MaterialPageRoute(builder: (_) => ChatRoom());
       case '/setting':
         return MaterialPageRoute(builder: (_) => Setting());
       case '/profile':
         return MaterialPageRoute(builder: (_) => Profile());
       case '/image_upload':
-        return MaterialPageRoute(builder: (_) => ImageCapture());
+        return MaterialPageRoute(builder: (_) => ImageCapture(isFirst: false));
+      case '/image_upload_first':
+        return MaterialPageRoute(builder: (_) => ImageCapture(isFirst: true));
       case '/register':
         return MaterialPageRoute(builder: (_) => Register());
       case '/login':
@@ -52,7 +55,15 @@ class RouteGenerator {
       case '/notification':
         return MaterialPageRoute(builder: (_) => Notifications());
       case '/discover':
-        return MaterialPageRoute(builder: (_) => Discover());
+        return MaterialPageRoute(builder: (_) => Discover(user: args));
+      case '/help':
+        return MaterialPageRoute(builder: (_) => Help());
+      case '/gallery':
+        return MaterialPageRoute(builder: (_) => Gallery());
+      case '/intro':
+        return MaterialPageRoute(builder: (_) => Intro(uid: args));
+      case '/report':
+        return MaterialPageRoute(builder: (_) => Report(target: args));
       default:
         return _errorRoute();
     }

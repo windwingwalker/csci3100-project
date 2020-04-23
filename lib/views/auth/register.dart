@@ -10,19 +10,18 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  bool loading = false;
 
+  bool loading = false;
   String email = '';
   String password = '';
   void submit() async {
     if (_formKey.currentState.validate()){
       setState(() => loading = true);
       dynamic result = await _auth.signUp(email, password);
+      setState(() => loading = false);
       if (result == null){
-        setState(() => loading = false);
         showDialog(
           context: context,
           builder: (BuildContext context){
@@ -39,8 +38,7 @@ class _RegisterState extends State<Register> {
             );
           },
         );
-      } else {
-        setState(() => loading = false);
+      }else {
         showDialog(
           context: context,
           builder: (BuildContext context){
@@ -96,7 +94,7 @@ class _RegisterState extends State<Register> {
                     validator: (val) => val != password || val.isEmpty ? "Not match" : null,
                     cursorColor: Colors.lightGreenAccent,
                     style: TextStyle(color: Colors.orange),
-                    decoration: textInputDecoration.copyWith(hintText: 'Confirm password'),
+                    decoration: textInputDecoration.copyWith(labelText: 'Confirm password'),
                   ),
                   SizedBox(height: 18.0),
                   MySubmitButton("Register", submit),

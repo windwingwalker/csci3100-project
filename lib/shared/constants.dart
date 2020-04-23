@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const textInputDecoration = InputDecoration(
   //fillColor: Colors.orange,
   filled: true,
+  labelStyle: TextStyle(color: Colors.lightGreenAccent),
   hintStyle: TextStyle(
     color: Colors.orange,
   ),
@@ -14,7 +15,7 @@ const textInputDecoration = InputDecoration(
     ),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.green, width: 2.0),
+    borderSide: BorderSide(color: Colors.lightGreenAccent, width: 2.0),
     borderRadius: BorderRadius.vertical(
       top: Radius.circular(25.0),
       bottom: Radius.circular(25.0),
@@ -53,7 +54,7 @@ const bodyDecoration = BoxDecoration(
   ),
 );
 
-const buttonDecoration = BoxDecoration(
+const settingButtonDecoration = BoxDecoration(
   border: Border(
     bottom: BorderSide(
         color: Colors.amber,
@@ -65,6 +66,16 @@ const buttonDecoration = BoxDecoration(
     ),
   )
 );
+
+const homeButtonDecoration = BoxDecoration(
+  border: Border(
+    right: BorderSide(
+      color: Colors.indigo,
+      width: 2.0
+    )
+  )
+);
+
 
 
 

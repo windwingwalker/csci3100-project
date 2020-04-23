@@ -1,4 +1,4 @@
-import 'package:csci3100/models/user.dart';
+/*import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/database.dart';
 import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -94,4 +94,4 @@ class _SettingFormState extends State<SettingForm> {
       }
     );
   }
-}
+}*/

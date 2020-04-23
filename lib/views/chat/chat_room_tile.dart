@@ -1,4 +1,5 @@
 import 'package:csci3100/services/database.dart';
+import 'package:csci3100/services/messagedb.dart';
 import 'package:csci3100/views/chat/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:csci3100/models/user.dart';
@@ -18,9 +19,9 @@ class ChatRoomTile extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.0),
       child: GestureDetector(
         onTap: () {
-          DatabaseService(chatRoomId: room).resetUnread(isUser1);
+          MessageDB(chatRoomId: room).resetUnread(isUser1);
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ChatRoom(room: room, targetName: target.name, targetId: target.uid, isUser1: isUser1,)),
+            MaterialPageRoute(builder: (context) => ChatRoom(room: room, target: target, isUser1: isUser1,)),
           );
         },
         child: Card(
@@ -29,6 +30,13 @@ class ChatRoomTile extends StatelessWidget {
             leading: CircleAvatar(
               radius: 25.0,
               backgroundColor: Colors.brown[300],
+              child: ClipOval(
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.network(target.url, fit: BoxFit.fill),
+                ),
+              ),
             ),
             title: Text(target.name),
             subtitle: Text(unread.toString()),

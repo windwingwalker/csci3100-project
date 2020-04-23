@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/user.dart';
 import 'package:csci3100/services/database.dart';
+import 'package:csci3100/services/imagedb.dart';
+import 'package:csci3100/services/userdb.dart';
+import 'package:csci3100/shared/constants.dart';
+import 'package:csci3100/shared/inputs.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +14,9 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ImageCapture extends StatefulWidget {
+  final bool isFirst;
+
+  const ImageCapture({this.isFirst});
   @override
   _ImageCaptureState createState() => _ImageCaptureState();
 }
@@ -39,10 +46,6 @@ class _ImageCaptureState extends State<ImageCapture> {
           toolbarWidgetColor: Colors.indigo,
           toolbarTitle: 'Crop It',
         ),
-        // ratioX: 1.0,
-        // ratioY: 1.0,
-         // maxWidth: 512,
-         // maxHeight: 512,
     );
 
     setState(() {
@@ -50,11 +53,19 @@ class _ImageCaptureState extends State<ImageCapture> {
     });
   }
 
+  Widget _title(){
+    if (widget.isFirst){
+      return MyFirstLoginTitle(text: "Upload your first photo", size: 30,);
+    }else{
+      return Text("Upload You photo", style: TextStyle(color: Colors.orange, fontSize: 20),);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final userId = Provider.of<UserId>(context);
     return StreamBuilder<User>(
-      stream: DatabaseService(uid: user.uid).user,
+      stream: UserDB(uid: userId.uid).user,
       builder: (context, snapshot) {
         if (snapshot.hasData){
           User user = snapshot.data;
@@ -72,36 +83,48 @@ class _ImageCaptureState extends State<ImageCapture> {
                     icon: Icon(Icons.photo_library),
                     onPressed: () => _pickImage(ImageSource.gallery),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.last_page),
-                    onPressed: () => Navigator.of(context).pushReplacementNamed('/profile'),
-                  )
+                  if (!widget.isFirst)...[
+                    IconButton(
+                      icon: Icon(Icons.last_page),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ]
+
                 ],
               ),
             ),
-            body: ListView(
-              children: <Widget>[
-                if (_imageFile != null) ...[
-                  Container(
-                    height: 480,
-                    child: Image.file(_imageFile),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      FlatButton(
-                        child: Icon(Icons.crop),
-                        onPressed: _cropImage,
+            body: SafeArea(
+              child: Container(
+                decoration: bodyDecoration,
+                child: ListView(
+                  children: <Widget>[
+                    _title(),
+                    if (_imageFile != null) ...[
+                      Container(
+                        height: 450,
+                        child: Image.file(_imageFile),
                       ),
-                      FlatButton(
-                        child: Icon(Icons.refresh),
-                        onPressed: _clear,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          FlatButton.icon(
+                            icon: Icon(Icons.crop),
+                            onPressed: _cropImage,
+                            label: Text("Crop"),
+                          ),
+                          FlatButton.icon(
+                            icon: Icon(Icons.refresh),
+                            onPressed: _clear,
+                            label: Text("Refresh"),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Uploader(file: _imageFile, user: user,),
-                ]
-              ],
+                      Uploader(file: _imageFile, user: user,isFirst: widget.isFirst,),
+
+                    ]
+                  ],
+                ),
+              ),
             ),
           );
         }else{
@@ -115,7 +138,8 @@ class _ImageCaptureState extends State<ImageCapture> {
 class Uploader extends StatefulWidget {
   final File file;
   final User user;
-  Uploader({Key key, this.file, this.user}) : super(key: key);
+  final bool isFirst;
+  Uploader({Key key, this.file, this.user, this.isFirst}) : super(key: key);
 
   @override
   _UploaderState createState() => _UploaderState();
@@ -125,10 +149,10 @@ class _UploaderState extends State<Uploader> {
   final FirebaseStorage _storage = FirebaseStorage(storageBucket: "gs://csci3100-group4.appspot.com/");
 
   StorageUploadTask _uploadTask;
+  String now = DateTime.now().toIso8601String().toString();
 
   void _startUpload(){
-    int num = widget.user.imageNum + 1;
-    String filePath = 'images/${widget.user.uid}/$num.png';
+    String filePath = 'images/${widget.user.uid}/$now.png';
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
     });
@@ -146,8 +170,13 @@ class _UploaderState extends State<Uploader> {
               if (_uploadTask.isComplete)
                 FlatButton.icon(
                   onPressed: () {
-                    DatabaseService(uid: widget.user.uid).updateOneData('imageNum', FieldValue.increment(1));
-                    Navigator.of(context).pushReplacementNamed('/profile');
+                    UserDB(uid: widget.user.uid).updateOneData('imageNum', FieldValue.increment(1));
+                    ImageDB(uid: widget.user.uid).saveImageUrl(now, widget.isFirst);
+                    if (widget.isFirst){
+                      Navigator.of(context).pushReplacementNamed('/bottombar');
+                    }else{
+                      Navigator.of(context).pop();
+                    }
                   },
                   icon: Icon(Icons.done),
                   label: Text("Finish")
@@ -168,16 +197,13 @@ class _UploaderState extends State<Uploader> {
           );
         }
       );
-
     }else{
       return FlatButton.icon(
           onPressed: _startUpload,
           icon: Icon(Icons.cloud_upload),
-          label: Text("Upload to Firebase"),
+          label: Text("Upload"),
       );
-
     }
-
   }
 }
 

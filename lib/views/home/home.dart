@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/user.dart';
-import 'package:csci3100/services/database.dart';
+import 'package:csci3100/services/likedb.dart';
+import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
+import 'package:csci3100/shared/inputs.dart';
 import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,207 +15,145 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
+
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     CardController controller; //Use this to trigger swap.
     final user = Provider.of<User>(context);
-    final DatabaseService db = DatabaseService(uid: user.uid);
-    return StreamBuilder<List<User>>(
-      stream: db.users,
-      builder: (context, snapshot) {
-        if (snapshot.hasData){
-          List<User> users = snapshot.data;
-          return StreamBuilder<QuerySnapshot>(
-            stream: db.likes,
-            builder: (context, snapshot) {
-              if (snapshot.hasData){
-                List<DocumentSnapshot> likes = snapshot.data.documents;
-                for(var i = 0; i < users.length; i++){
-                  for (var j = 0; j <likes.length; j++){
-                    if(users[i].uid == likes[j]['to']){
-                      users.removeAt(i);
-                    }
-                  }
-                }
-                return StreamBuilder<QuerySnapshot>(
-                  stream: db.dislikes,
+    if (user != null){
+      final UserDB userdb = UserDB(uid: user.uid, currentUser: user);
+      final LikeDB likedb = LikeDB(uid: user.uid);
+      return StreamBuilder<List<User>>(
+          stream: userdb.filteredUsers,
+          builder: (context, snapshot) {
+            if (snapshot.hasData){
+              List<User> users = snapshot.data;
+              return StreamBuilder<QuerySnapshot>(
+                  stream: likedb.likes,
                   builder: (context, snapshot) {
                     if (snapshot.hasData){
-                      List<DocumentSnapshot> dislikes = snapshot.data.documents;
+                      List<DocumentSnapshot> likes = snapshot.data.documents;
                       for(var i = 0; i < users.length; i++){
-                        for (var j = 0; j <dislikes.length; j++){
-                          if(users[i].uid == dislikes[j]['to']){
+                        for (var j = 0; j <likes.length; j++){
+                          if(users[i].uid == likes[j]['to']){
                             users.removeAt(i);
                           }
                         }
                       }
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text("CUagain"),
-                          flexibleSpace: Container(
-                            decoration: appBarDecoration,
-                          ),
-                        ),
-                        body: Center(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                    height: MediaQuery.of(context).size.height * 0.6,
-                                    child: new TinderSwapCard(
-                                        orientation: AmassOrientation.BOTTOM,
-                                        totalNum: users.length,
-                                        stackNum: 3,
-                                        swipeEdge: 4.0,
-                                        maxWidth: MediaQuery.of(context).size.width * 0.9,
-                                        maxHeight: MediaQuery.of(context).size.width * 0.9,
-                                        minWidth: MediaQuery.of(context).size.width * 0.8,
-                                        minHeight: MediaQuery.of(context).size.width * 0.8,
-                                        cardBuilder: (context, index) => Card(
-                                          //child: Image.asset('${welcomeImages[index]}'),
-                                          child: Text(users[index].name),
-                                        ),
-                                        cardController: controller = CardController(),
-                                        swipeUpdateCallback:
-                                            (DragUpdateDetails details, Alignment align) {
-                                          /// Get swiping card's alignment
-                                          if (align.x < 0) {
-                                            //Card is LEFT swiping
-                                          } else if (align.x > 0) {
-                                            //Card is RIGHT swiping
-                                          }
-                                        },
-                                        swipeCompleteCallback:
-                                            (CardSwipeOrientation orientation, int index) {
-                                          if (orientation == CardSwipeOrientation.RIGHT){
-                                            db.sendLike(users[index].uid);
-                                          }else if (orientation == CardSwipeOrientation.LEFT){
-                                            db.sendDislike(users[index].uid);
-                                          }
-                                          /// Get orientation & index of swiped card!
-                                        })),
-                                Row(
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(Icons.clear),
-                                      onPressed: null,
+                      return StreamBuilder<QuerySnapshot>(
+                          stream: likedb.dislikes,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData){
+                              List<DocumentSnapshot> dislikes = snapshot.data.documents;
+                              for(var i = 0; i < users.length; i++){
+                                for (var j = 0; j <dislikes.length; j++){
+                                  if(users[i].uid == dislikes[j]['to']){
+                                    users.removeAt(i);
+                                  }
+                                }
+                              }
+                              if (users.length != 0){
+                                return Scaffold(
+                                  appBar: AppBar(
+                                    title: Text("CUagain"),
+                                    flexibleSpace: Container(
+                                      decoration: appBarDecoration,
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.info),
-                                      onPressed: null,
+                                  ),
+                                  body: Container(
+                                    decoration: bodyDecoration,
+                                    child: Center(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                                height: MediaQuery.of(context).size.height * 0.6,
+                                                child: new TinderSwapCard(
+                                                    orientation: AmassOrientation.BOTTOM,
+                                                    totalNum: users.length,
+                                                    stackNum: 3,
+                                                    swipeEdge: 4.0,
+                                                    maxWidth: MediaQuery.of(context).size.width * 0.9,
+                                                    maxHeight: MediaQuery.of(context).size.width * 0.9,
+                                                    minWidth: MediaQuery.of(context).size.width * 0.8,
+                                                    minHeight: MediaQuery.of(context).size.width * 0.8,
+                                                    cardBuilder: (context, index) => Card(
+                                                      child: Image.network('${users[index].url}'),
+                                                    ),
+                                                    cardController: controller = CardController(),
+                                                    swipeUpdateCallback:
+                                                        (DragUpdateDetails details, Alignment align) {
+                                                      /// Get swiping card's alignment
+                                                      if (align.x < 0) {
+                                                        //Card is LEFT swiping
+                                                      } else if (align.x > 0) {
+                                                        //Card is RIGHT swiping
+                                                      }
+                                                    },
+                                                    swipeCompleteCallback:
+                                                        (CardSwipeOrientation orientation, int index) {
+                                                      if (orientation == CardSwipeOrientation.RIGHT){
+                                                        setState(() {
+                                                          currentIndex += 1;
+                                                        });
+                                                        likedb.sendLike(users[index].uid);
+                                                      }else if (orientation == CardSwipeOrientation.LEFT){
+                                                        setState(() {
+                                                          currentIndex += 1;
+                                                        });
+                                                        likedb.sendDislike(users[index].uid);
+                                                      }
+                                                      /// Get orientation & index of swiped card!
+                                                    })),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                MyHomeButton(Icons.clear, ()=> likedb.sendDislike(users[currentIndex].uid)),
+                                                MyHomeButton(Icons.info, () => Navigator.of(context).pushNamed('/intro', arguments: users[currentIndex].uid)),
+                                                MyHomeButton(Icons.check, ()=> likedb.sendLike(users[currentIndex].uid))
+                                              ],
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                );
+                              }else{
+                                return Scaffold(
+                                  appBar: AppBar(
+                                    title: Text("CUagain"),
+                                    flexibleSpace: Container(
+                                      decoration: appBarDecoration,
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.check),
-                                      onPressed: null,
+                                  ),
+                                  body: Container(
+                                    decoration: bodyDecoration,
+                                    child: Center(
+                                      child: Text("No user for you to choose now", style: TextStyle(color: Colors.orange, fontSize: 50),),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            )),
+                                  ),
+                                );
+                              }
+                            }else{
+                              return Loading();
+                            }
+                          }
                       );
-                    }else{
+                    }
+                    else{
                       return Loading();
                     }
                   }
-                );
-              }
-              else{
-                return Loading();
-              }
+              );
+            }else{
+              return Loading();
             }
-          );
-        }else{
-          return Loading();
-        }
-      }
-    );
-  }
-
-
-  /*List<Widget> cardList;
-  void _removeCard(index){
-    setState(() {
-      cardList.removeAt(index);
-    });
-  }
-
-  @override
-  void initState(){
-    super.initState();
-    cardList = _getMatchCard();
-  }
-  /*void _showSettingsPanel() {
-       showModalBottomSheet(context: context, builder: (context) {
-         return Container(
-           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-           child: SettingForm(),
-         );
-       });
-     }*/
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    return StreamBuilder<List<User>>(
-      stream: DatabaseService().users,
-      builder: (context, snapshot){
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('CUagain'),
-            flexibleSpace: Container(
-              decoration: appBarDecoration,
-            ),
-          ),
-          body: Center(
-            child: Stack(
-              alignment: Alignment.center,
-              children: cardList,
-            ),
-          ),
-        );
-      },
-    );
-  }
-  List<Widget> _getMatchCard(){
-    List<MatchCard> cards = new List();
-    cards.add(MatchCard(255, 0, 0, 10));
-    cards.add(MatchCard(0, 255, 0, 20));
-    cards.add(MatchCard(0, 0, 255, 30));
-
-    List<Widget> cardList = new List();
-    for (int i = 0; i < 3; i++){
-      cardList.add(Positioned(
-        top: cards[i].margin,
-        child: Draggable(
-          onDragEnd: (drag) => _removeCard(i),
-          childWhenDragging: Container(),
-          feedback: Card(
-            elevation: 10,
-            color: Color.fromARGB(255, cards[i].redColor, cards[i].greenColor, cards[i].blueColor),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular((10)),
-            ),
-            child: Container(
-              child: Text("hi"),
-              width: 240,
-              height: 300,
-            ),
-          ),
-          child: Card(
-            elevation: 10,
-            color: Color.fromARGB(255, cards[i].redColor, cards[i].greenColor, cards[i].blueColor),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular((10)),
-            ),
-            child: Container(
-              child: Text("hi"),
-              width: 240,
-              height: 300,
-            ),
-          ),
-        ),
-      ));
+          }
+      );
+    }else{
+      return Loading();
     }
-    return cardList;
-  }*/
+  }
 }
 
 
