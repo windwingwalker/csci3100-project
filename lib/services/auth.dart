@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:csci3100/models/user.dart';
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/services/imagedb.dart';
 import 'package:csci3100/services/userdb.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,7 +65,6 @@ class AuthService{
     try{
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser fireUser = result.user;
-      //return _userFromFirebaseUser(fireUser);
 
       if (fireUser.isEmailVerified){
         UserDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toIso8601String().toString());

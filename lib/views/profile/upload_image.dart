@@ -173,6 +173,7 @@ class _UploaderState extends State<Uploader> {
                     UserDB(uid: widget.user.uid).updateOneData('imageNum', FieldValue.increment(1));
                     ImageDB(uid: widget.user.uid).saveImageUrl(now, widget.isFirst);
                     if (widget.isFirst){
+                      UserDB(uid: widget.user.uid).updateOneData('firstLogin', false);
                       Navigator.of(context).pushReplacementNamed('/bottombar');
                     }else{
                       Navigator.of(context).pop();

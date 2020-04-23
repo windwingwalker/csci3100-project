@@ -43,7 +43,6 @@ class MessageDB{
     }).toList();
   }
 
-
   Stream<QuerySnapshot> get chatRooms{
     return chatRoomCollection.orderBy('lastModify', descending: true).snapshots();
   }

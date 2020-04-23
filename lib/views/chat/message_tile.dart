@@ -15,9 +15,6 @@ class MessageTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: userId.uid == message.from ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          //Text(
-          //  from,
-          //),
           Material(
             color: userId.uid == message.from ? Colors.teal : Colors.red,
             borderRadius: BorderRadius.circular(10.0),

@@ -25,7 +25,6 @@ class UserDB{
       "age": age,
       "gender": gender,
       "college": college,
-      "firstLogin": false,
       "imageNum": 0,
       "isActivate": true
     });
