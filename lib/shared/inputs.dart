@@ -1,6 +1,3 @@
-//import 'dart:html';
-
-import 'package:csci3100/views/setting/setting.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -290,13 +287,12 @@ class MyIntroText extends StatelessWidget{
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.orange,
+          color: Colors.amberAccent,
           fontSize: size,
         ),
       ),
     );
   }
-
 }
 
 

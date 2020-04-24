@@ -3,6 +3,7 @@ import 'package:csci3100/services/auth.dart';
 import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/shared/inputs.dart';
+import 'package:csci3100/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,10 +13,7 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  bool isDeactivate = false;
-
-  bool showEmail = false;
-  bool showBirthday = true;
+  bool isDeactivate;
   bool deleteAc = false;
   bool isBlur = false;
 
@@ -57,40 +55,50 @@ class _AccountState extends State<Account> {
         });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<UserId>(context);
     UserDB db = UserDB(uid: userId.uid);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Account"),
-        flexibleSpace: Container(
-          decoration: appBarDecoration,
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-        decoration: bodyDecoration,
-        child: Column(
-          children: <Widget>[
-            MySwitch(name: "Deactivate Account", value: isDeactivate ,changeFunc: (bool val){
-              setState(()=>isDeactivate = val);
-              db.updateOneData('isActivate', !val);
-            }),
-            MySwitch(name: "Blur Mode", value: isBlur ,changeFunc: (bool val){
-              setState(()=> isBlur = val);
-              db.updateOneData('isBlur', val);
-            }),
-            MySwitch(name: "Delete Account", value: deleteAc ,changeFunc: (bool val){
-              if (val = true){
-                _displayDialog(context);
-              }
-            }),
+    return StreamBuilder<User>(
+      stream: UserDB(uid: userId.uid).user,
+      builder: (context, snapshot) {
+        if (snapshot.hasData){
+          User user = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Account"),
+              flexibleSpace: Container(
+                decoration: appBarDecoration,
+              ),
+            ),
+            body: Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+              decoration: bodyDecoration,
+              child: Column(
+                children: <Widget>[
+                  MySwitch(name: "Deactivate Account", value: isDeactivate ?? !user.isActivate,changeFunc: (bool val){
+                    setState(()=>isDeactivate = val);
+                    db.updateOneData('isActivate', !val);
+                  }),
+                  MySwitch(name: "Blur Mode", value: isBlur ,changeFunc: (bool val){
+                    setState(()=> isBlur = val);
+                    db.updateOneData('isBlur', val);
+                  }),
+                  MySwitch(name: "Delete Account", value: deleteAc ,changeFunc: (bool val){
+                    if (val = true){
+                      _displayDialog(context);
+                    }
+                  }),
 
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
+          );
+        }else{
+          return Loading();
+        }
+
+      }
     );
   }
 }

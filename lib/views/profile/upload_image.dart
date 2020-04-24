@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/user.dart';
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/services/imagedb.dart';
 import 'package:csci3100/services/userdb.dart';
 import 'package:csci3100/shared/constants.dart';
@@ -57,7 +56,7 @@ class _ImageCaptureState extends State<ImageCapture> {
     if (widget.isFirst){
       return MyFirstLoginTitle(text: "Upload your first photo", size: 30,);
     }else{
-      return Text("Upload You photo", style: TextStyle(color: Colors.orange, fontSize: 20),);
+      return Text("Upload Your photo", style: TextStyle(color: Colors.orange, fontSize: 20),);
     }
   }
 

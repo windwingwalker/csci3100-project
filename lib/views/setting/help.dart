@@ -25,7 +25,6 @@ class _HelpState extends State<Help> {
   @override
   Widget build(BuildContext context) {
 
-
     return loading ? Loading() : Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(

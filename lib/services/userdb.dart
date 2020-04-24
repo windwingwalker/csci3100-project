@@ -53,7 +53,6 @@ class UserDB{
       "age": age,
       "college": college,
       "description": desc
-
     });
   }
 

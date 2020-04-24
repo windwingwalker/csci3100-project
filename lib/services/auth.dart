@@ -66,7 +66,7 @@ class AuthService{
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser fireUser = result.user;
 
-      if (fireUser.isEmailVerified){
+      if (fireUser.isEmailVerified) {
         UserDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toIso8601String().toString());
         ImageDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toIso8601String().toString());
         return _userFromFirebaseUser(fireUser);
