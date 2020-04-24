@@ -67,8 +67,8 @@ class AuthService{
       FirebaseUser fireUser = result.user;
 
       if (fireUser.isEmailVerified) {
-        UserDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toIso8601String().toString());
-        ImageDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toIso8601String().toString());
+        UserDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toUtc().toIso8601String().toString());
+        ImageDB(uid: fireUser.uid).updateOneData("lastLogin", DateTime.now().toUtc().toIso8601String().toString());
         return _userFromFirebaseUser(fireUser);
       }
       else
