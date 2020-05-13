@@ -13,6 +13,7 @@ class Setting extends StatelessWidget {
     final userId = Provider.of<UserId>(context);
     final AuthService _auth = AuthService();
 
+    //define call back functions of different buttons
     void accountFunc(){
       Navigator.of(context).pushNamed('/account');
     }

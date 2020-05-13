@@ -121,7 +121,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           )),
                                     ),
                                   );
-                                }else if (user.isActivate != true){
+                                }else if (user.isActivate != true){ //if user is inactive
                                   return Scaffold(
                                     appBar: AppBar(
                                       title: Text("CUagain"),
@@ -136,7 +136,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       ),
                                     ),
                                   );
-                                }else{
+                                }else{ //when all user has shown
                                   return Scaffold(
                                     appBar: AppBar(
                                       title: Text("CUagain"),

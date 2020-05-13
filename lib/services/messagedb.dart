@@ -9,7 +9,6 @@ class MessageDB{
   final bool isUser1;
   MessageDB({this.uid, this.chatRoomId, this.isUser1});
 
-
   Future resetUnread(bool isUser1) async {
     return isUser1 ? await chatRoomCollection.document(chatRoomId).updateData({'user1Unread': 0,})
         : await chatRoomCollection.document(chatRoomId).updateData({'user2Unread': 0,});

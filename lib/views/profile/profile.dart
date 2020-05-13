@@ -30,6 +30,7 @@ class _ProfileState extends State<Profile> {
     final user = Provider.of<User>(context);
 
     if (user != null){
+
       void submit() async {
         setState(() {
           loading = true;
@@ -48,6 +49,7 @@ class _ProfileState extends State<Profile> {
           loading = false;
         });
       }
+
       return StreamBuilder<List<MyUrl>>(
         stream: ImageDB(uid: user.uid).images,
         builder: (context, snapshot) {

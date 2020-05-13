@@ -5,10 +5,11 @@ import 'package:csci3100/services/imagedb.dart';
 import 'package:csci3100/services/userdb.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+//define all authentication methods
 class AuthService{
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //turn a FirebaseUser into User type
+  //turn a FirebaseUser into User
   UserId _userFromFirebaseUser(FirebaseUser user){
     return user != null ? UserId(uid: user.uid) : null;
   }
@@ -18,6 +19,7 @@ class AuthService{
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser); //FirebaseUser -> User
   }
 
+  //sign out method
   Future signOut() async{
     try{
       return await _auth.signOut();
@@ -27,6 +29,7 @@ class AuthService{
     }
   }
 
+  //delete account methods
   Future deleteAccount() async{
     try{
       var user = await _auth.currentUser();
@@ -39,6 +42,7 @@ class AuthService{
     }
   }
 
+  //reset password method
   Future resetPassword(String email) async {
     try{
       return await _auth.sendPasswordResetEmail(email: email);
@@ -48,6 +52,8 @@ class AuthService{
     }
   }
 
+
+  //sign up method
   Future signUp(String email, String password) async {
     try{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -61,8 +67,10 @@ class AuthService{
     }
   }
 
-  Future signIn(String email, String password) async{ //AuthResult -> FirebaseUser -> User
+  //sign in method
+  Future signIn(String email, String password) async{
     try{
+      //AuthResult -> FirebaseUser -> User
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser fireUser = result.user;
 

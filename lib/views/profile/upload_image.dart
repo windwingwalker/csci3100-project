@@ -134,6 +134,7 @@ class _ImageCaptureState extends State<ImageCapture> {
   }
 }
 
+//upload image
 class Uploader extends StatefulWidget {
   final File file;
   final User user;

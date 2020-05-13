@@ -1,4 +1,3 @@
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/services/messagedb.dart';
 import 'package:csci3100/views/chat/chat_room.dart';
 import 'package:flutter/material.dart';

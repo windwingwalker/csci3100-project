@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
+//custom setting button
 class MySettingButton extends StatelessWidget {
   final String name;
   final icon;
@@ -30,6 +31,7 @@ class MySettingButton extends StatelessWidget {
   }
 }
 
+//custom home button
 class MyHomeButton extends StatelessWidget{
   final icon;
   final VoidCallback callback;
@@ -57,6 +59,7 @@ class MyHomeButton extends StatelessWidget{
   }
 }
 
+//custom submit button
 class MySubmitButton extends StatelessWidget {
   final VoidCallback callback;
   final String name;
@@ -79,6 +82,7 @@ class MySubmitButton extends StatelessWidget {
   }
 }
 
+//custom text form
 class MyTextFormField extends StatelessWidget {
   final Function(String) changeFunc;
   final String type;
@@ -141,6 +145,7 @@ class MyTextFormField extends StatelessWidget {
   }
 }
 
+//custom slider
 class MySlider extends StatelessWidget {
   final Function(double) changeFunc;
   final double age;
@@ -173,6 +178,7 @@ class MySlider extends StatelessWidget {
   }
 }
 
+//custom drop down button
 class MyDropdownButtonFormField extends StatelessWidget {
   final List<String> mylist;
   final String type;
@@ -198,6 +204,7 @@ class MyDropdownButtonFormField extends StatelessWidget {
   }
 }
 
+//custom range slider
 class MyRangeSlider extends StatelessWidget {
   final RangeValues range;
   final Function(RangeValues) changeFunc;
@@ -231,6 +238,7 @@ class MyRangeSlider extends StatelessWidget {
   }
 }
 
+//custom switch
 class MySwitch extends StatelessWidget {
   final Function(bool) changeFunc;
   final String name;
@@ -261,6 +269,7 @@ class MySwitch extends StatelessWidget {
   }
 }
 
+//custom login title
 class MyFirstLoginTitle extends StatelessWidget{
   final String text;
   final double size;
@@ -275,6 +284,7 @@ class MyFirstLoginTitle extends StatelessWidget{
   }
 }
 
+//custom intro text
 class MyIntroText extends StatelessWidget{
 
   final String text;

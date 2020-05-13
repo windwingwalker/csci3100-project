@@ -19,6 +19,7 @@ import 'package:csci3100/views/chat/chat.dart';
 import 'package:csci3100/views/profile/profile.dart';
 import 'package:csci3100/views/auth/login.dart';
 
+//this is a route class to manage all routing in the program
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings){
     final args = settings.arguments;

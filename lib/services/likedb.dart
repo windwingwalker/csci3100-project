@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//this class handle all methods related to like and dislike collection
 class LikeDB{
   final CollectionReference likeCollection = Firestore.instance.collection('likes');
   final CollectionReference dislikeCollection = Firestore.instance.collection('dislikes');
@@ -8,6 +9,7 @@ class LikeDB{
   final String uid;
   LikeDB({this.uid});
 
+  //triggered when someone like others
   Future sendLike(String targetId) async {
     bool isUser1 = uid.compareTo(targetId) == -1;
     QuerySnapshot qs = await likeCollection.where('to', isEqualTo: uid)
@@ -37,7 +39,7 @@ class LikeDB{
     }
   }
 
-
+  //set dislike record into database
   Future sendDislike(String targetId) async {
     dislikeCollection.document().setData({
       "from": uid,
@@ -46,10 +48,12 @@ class LikeDB{
   }
 
 
+  //create a stream to likes collection
   Stream<QuerySnapshot> get likes{
     return likeCollection.where("from", isEqualTo: uid).snapshots();
   }
 
+  //create a stream to dislike collection
   Stream<QuerySnapshot> get dislikes{
     return dislikeCollection.where("from", isEqualTo: uid).snapshots();
   }

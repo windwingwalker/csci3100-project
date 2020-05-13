@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//style of input text field
 const textInputDecoration = InputDecoration(
   //fillColor: Colors.orange,
   filled: true,
@@ -40,12 +41,14 @@ const textInputDecoration = InputDecoration(
   )
 );
 
+//style of app bar
 const appBarDecoration = BoxDecoration(
   gradient: LinearGradient(
     colors: <Color>[Colors.orange, Colors.amberAccent],
   ),
 );
 
+//style of body
 const bodyDecoration = BoxDecoration(
   gradient: LinearGradient(
     begin: Alignment.topRight,
@@ -54,6 +57,7 @@ const bodyDecoration = BoxDecoration(
   ),
 );
 
+//style of setting
 const settingButtonDecoration = BoxDecoration(
   border: Border(
     bottom: BorderSide(
@@ -67,6 +71,7 @@ const settingButtonDecoration = BoxDecoration(
   )
 );
 
+//style home button
 const homeButtonDecoration = BoxDecoration(
   border: Border(
     right: BorderSide(

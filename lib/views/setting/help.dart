@@ -14,6 +14,7 @@ class _HelpState extends State<Help> {
   String email;
   String content;
   bool loading = false;
+
   void submit() async {
     setState(() {loading = true;});
     if (_formKey.currentState.validate()) {

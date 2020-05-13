@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //this is a wrapper to route user to different pages depends on its authentication
     final userId = Provider.of<UserId>(context);
     return userId == null ? Login() : BottomBar();
   }

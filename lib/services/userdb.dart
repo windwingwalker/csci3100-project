@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csci3100/models/user.dart';
 
+//this class define all method related to user collection
 class UserDB{
   final CollectionReference userCollection = Firestore.instance.collection('user');
   final CollectionReference imagesCollection = Firestore.instance.collection('images');
@@ -10,8 +11,10 @@ class UserDB{
   final uid;
   final User currentUser;
 
+  //constructor
   UserDB({this.uid, this.currentUser});
 
+  //set the info when user first login
   Future setFirst() async {
     return await userCollection.document(uid).setData({
       "firstLogin": true,
@@ -19,6 +22,7 @@ class UserDB{
     });
   }
 
+  //set the basic info of user when he first login
   Future setSelfInfo(String name, double age, String gender, String college) async {
     return await userCollection.document(uid).updateData({
       "name": name,
@@ -30,6 +34,7 @@ class UserDB{
     });
   }
 
+  //set the basic info of user's target when he first login
   Future setTargetInfo(String gender, double start, double end) async {
     return await userCollection.document(uid).updateData({
       "targetGender": gender,
@@ -38,6 +43,7 @@ class UserDB{
     });
   }
 
+  //set the description field when user first login
   Future setDesc(String desc) async {
     return await userCollection.document(uid).updateData({
       "description": desc,
@@ -45,7 +51,7 @@ class UserDB{
   }
 
 
-  //input a data into firestore
+  //update user existing data
   Future updateUserData(String name, double age, String college, String gender, String desc) async {
     return await userCollection.document(uid).updateData({
       "name": name,
@@ -56,10 +62,12 @@ class UserDB{
     });
   }
 
+  //delete user data
   Future deleteData() async {
     return await userCollection.document(uid).delete();
   }
 
+  //
   Future updateOneData(String label, var value) async {
     return await userCollection.document(uid).updateData({
       label: value

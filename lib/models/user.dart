@@ -1,3 +1,4 @@
+//define user model
 class User{
   final String uid;
   final String name;
@@ -18,6 +19,7 @@ class User{
   User({this.uid, this.name, this.age, this.isBanned, this.isActivate, this.gender, this.college, this.firstLogin, this.liked, this.imageNum, this.imageIndex, this.url, this.desc, this.targetAgeStart, this.targetAgeEnd, this.targetGender});
 }
 
+//define userId model, which is used for the very first current user checking in main.dart
 class UserId{
   final String uid;
 

@@ -1,3 +1,4 @@
+//define message model
 class Message{
   final String time;
   final String text;

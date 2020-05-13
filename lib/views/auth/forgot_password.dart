@@ -21,6 +21,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (_formKey.currentState.validate()) {
       setState(() => loading = true);
       dynamic result = await _auth.resetPassword(email);
+      //if not match user
       if (result == null){
         setState(() {
           message = 'Invalid email';

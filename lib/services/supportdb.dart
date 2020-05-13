@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//this class define all method related to support collection
 class SupportDB{
   final CollectionReference supportCollection = Firestore.instance.collection('support');
   final String email;
@@ -7,6 +8,7 @@ class SupportDB{
 
   SupportDB({this.email, this.content});
 
+  //set a request record
   Future setRequest() async {
     return await supportCollection.document().setData({
       "type": "Request",
@@ -15,6 +17,7 @@ class SupportDB{
     });
   }
 
+  //set a report record
   Future setReport(String from, String to) async {
     return await supportCollection.document().setData({
       "type": "Report",

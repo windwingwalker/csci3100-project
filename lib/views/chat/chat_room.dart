@@ -1,6 +1,5 @@
 import 'package:csci3100/models/message.dart';
 import 'package:csci3100/models/user.dart';
-import 'package:csci3100/services/database.dart';
 import 'package:csci3100/services/messagedb.dart';
 import 'package:csci3100/shared/constants.dart';
 import 'package:csci3100/shared/inputs.dart';

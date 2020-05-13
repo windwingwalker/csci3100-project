@@ -30,12 +30,14 @@ class _BottomBarState extends State<BottomBar> {
         body: _pageOptions[_selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedPage,
+          //change the top page if any of the button clicked
           onTap: (int index){
             setState(() {
               _selectedPage = index;
             });
           },
           type: BottomNavigationBarType.fixed,
+          //these four buttons will remain the whole running time
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),

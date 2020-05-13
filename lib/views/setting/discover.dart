@@ -33,6 +33,8 @@ class _DiscoverState extends State<Discover> {
         Navigator.of(context).pop();
       }
     }
+
+    //set default value
     setState(() {
       if (gender == null){
         gender = widget.user.targetGender;
@@ -41,6 +43,7 @@ class _DiscoverState extends State<Discover> {
         range = RangeValues(widget.user.targetAgeStart, widget.user.targetAgeEnd);
       }
     });
+
     return loading ? Loading() : Scaffold(
       appBar: AppBar(
         title: Text("Discover Setting"),

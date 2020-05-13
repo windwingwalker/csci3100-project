@@ -20,6 +20,7 @@ class _AccountState extends State<Account> {
   TextEditingController _textFieldController = TextEditingController();
   final AuthService _auth = AuthService();
 
+  //a method to display popup dialog
   _displayDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -59,7 +60,7 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserId>(context);
     UserDB db = UserDB(uid: userId.uid);
-    return StreamBuilder<User>(
+    return StreamBuilder<User>( //listen to User stream
       stream: UserDB(uid: userId.uid).user,
       builder: (context, snapshot) {
         if (snapshot.hasData){
@@ -89,7 +90,6 @@ class _AccountState extends State<Account> {
                       _displayDialog(context);
                     }
                   }),
-
                 ],
               ),
             ),
